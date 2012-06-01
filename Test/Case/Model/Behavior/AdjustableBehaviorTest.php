@@ -28,46 +28,6 @@ class AdjustableTestCase extends CakeTestCase{
     }
 
     /**
-     * testSaveTrim
-     *
-     * en:
-     * jpn: Adjustableのtrim設定をすることでbeforeValidateの段階でフィールドにtrim()を適用できる
-     */
-    public function testSaveTrim(){
-        $this->FuzzyPost->convertFields = array(
-                                                array('field' => 'title',
-                                                      'trim' => true,
-                                                      'encoding' => 'UTF-8'),
-                                                );
-        $data = array('FuzzyPost' => array('title' => ' Title3 ',
-                                           'title_mb' => 'タイトル３',
-                                           'body' => 'Save OK'));
-        $result = $this->FuzzyPost->save($data);
-        $this->assertType('array', $result);
-
-        $id = $this->FuzzyPost->getLastInsertId();
-        $result = $this->FuzzyPost->findById($id);
-        $this->assertIdentical($result['FuzzyPost']['title'], 'Title3');
-
-        // en:
-        // jpn: trimのパラメータにtrueでない文字列を設定することでtrim()の第2引数($charlist)を設定することが可能
-        $this->FuzzyPost->convertFields = array(
-                                                array('field' => 'title',
-                                                      'trim' => 'Ti3',
-                                                      'encoding' => 'UTF-8'),
-                                                );
-        $data = array('FuzzyPost' => array('title' => 'Title3',
-                                           'title_mb' => 'タイトル３',
-                                           'body' => 'Save OK'));
-        $result = $this->FuzzyPost->save($data);
-        $this->assertType('array', $result);
-
-        $id = $this->FuzzyPost->getLastInsertId();
-        $result = $this->FuzzyPost->findById($id);
-        $this->assertIdentical($result['FuzzyPost']['title'], 'tle');
-    }
-
-    /**
      * testSaveAlphaNumericValidationError
      *
      * en:
@@ -109,6 +69,44 @@ class AdjustableTestCase extends CakeTestCase{
         $result = $this->FuzzyPost->findById($id);
         $this->assertIdentical($result['FuzzyPost']['title'], 'Title3');
         $this->assertIdentical($result['FuzzyPost']['title_mb'], 'Ｔｉｔｌｅ３');
+    }
+
+    /**
+     * testSaveReplace
+     *
+     * en:
+     * jpn: Adjustableのreplase設定をすることでbeforeValidateの段階でフィールドにmb_str_replace()を適用できる
+     */
+    public function testSaveReplace(){
+        $this->FuzzyPost->convertFields = array(
+                                                array('field' => 'title',
+                                                      'replace' => array('t', 'a'),
+                                                      'encoding' => 'UTF-8'),
+                                                );
+        $data = array('FuzzyPost' => array('title' => 'Title3',
+                                           'title_mb' => 'タイトル３',
+                                           'body' => 'Save OK'));
+        $result = $this->FuzzyPost->save($data);
+        $this->assertType('array', $result);
+
+        $id = $this->FuzzyPost->getLastInsertId();
+        $result = $this->FuzzyPost->findById($id);
+        $this->assertIdentical($result['FuzzyPost']['title'], 'Tiale3');
+
+        $this->FuzzyPost->convertFields = array(
+                                                array('field' => 'title',
+                                                      'replace' => array(array('t', 'i', ' '), array('a', 'b', '')),
+                                                      'encoding' => 'UTF-8'),
+                                                );
+        $data = array('FuzzyPost' => array('title' => 'Tit l e3',
+                                           'title_mb' => 'タイトル３',
+                                           'body' => 'Save OK'));
+        $result = $this->FuzzyPost->save($data);
+        $this->assertType('array', $result);
+
+        $id = $this->FuzzyPost->getLastInsertId();
+        $result = $this->FuzzyPost->findById($id);
+        $this->assertIdentical($result['FuzzyPost']['title'], 'Tbale3');
     }
 
     /**
