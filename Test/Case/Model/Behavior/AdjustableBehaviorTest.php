@@ -28,23 +28,6 @@ class AdjustableTestCase extends CakeTestCase{
     }
 
     /**
-     * testSaveAlphaNumericValidationError
-     *
-     * en:
-     * jpn: Adjustableの設定をせずにtitleフィールドにマルチバイトの文字列、title_mbに半角英数を入れたらバリデーションエラー
-     */
-    function testSaveAlphaNumericValidationError(){
-        $data = array('FuzzyPost' => array('title' => 'Ｔｉｔｌｅ３',
-                                           'title_mb' => 'title3',
-                                           'body' => 'Validation Error'));
-        $result = $this->FuzzyPost->save($data);
-        $this->assertFalse($result);
-
-        $expected = array('title', 'title_mb');
-        $this->assertIdentical($expected, array_keys($this->FuzzyPost->validationErrors));
-    }
-
-    /**
      * testSaveTrim
      *
      * en:
@@ -82,6 +65,23 @@ class AdjustableTestCase extends CakeTestCase{
         $id = $this->FuzzyPost->getLastInsertId();
         $result = $this->FuzzyPost->findById($id);
         $this->assertIdentical($result['FuzzyPost']['title'], 'tle');
+    }
+
+    /**
+     * testSaveAlphaNumericValidationError
+     *
+     * en:
+     * jpn: Adjustableの設定をせずにtitleフィールドにマルチバイトの文字列、title_mbに半角英数を入れたらバリデーションエラー
+     */
+    function testSaveAlphaNumericValidationError(){
+        $data = array('FuzzyPost' => array('title' => 'Ｔｉｔｌｅ３',
+                                           'title_mb' => 'title3',
+                                           'body' => 'Validation Error'));
+        $result = $this->FuzzyPost->save($data);
+        $this->assertFalse($result);
+
+        $expected = array('title', 'title_mb');
+        $this->assertIdentical($expected, array_keys($this->FuzzyPost->validationErrors));
     }
 
     /**
