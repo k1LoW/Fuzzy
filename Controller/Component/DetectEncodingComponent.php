@@ -28,19 +28,21 @@ class DetectEncodingComponent extends Component {
         $this->request = $controller->request;
         $isPost = ($this->request->is('post') || $this->request->is('put'));
         if ($isPost) {
-            $this->detectEncoding();
+            $this->_detectEncoding();
         }
     }
 
     /**
-     * detectEncoding
+     * _detectEncoding
      *
      * @see http://tanaka.sakura.ad.jp/archives/001071.html
      */
-    public function detectEncoding(){
+    private function _detectEncoding(){
         $this->encoding = null;
         Configure::write('Fuzzy.encoding', $this->encoding);
         if (!empty($this->request->data['_Fuzzy']['detectstr'])) {
+            $detectstr = $this->request->data['_Fuzzy']['detectstr'];
+            unset($this->request->data['_Fuzzy']);
             $charsetList = array(
                                  "UTF-8"  => "%E6%96%87%E5%AD%97",
                                  "SJIS"   => "%95%B6%8E%9A",
@@ -52,7 +54,7 @@ class DetectEncodingComponent extends Component {
                                  "GB2312" => "%CE%C4%D7%D6",
                                  );
             foreach( $charsetList as $key => $val ){
-                if( urlencode($this->request->data['_Fuzzy']['detectstr']) == $val ){
+                if( urlencode($detectstr) == $val ){
                     $this->encoding = $key;
                     Configure::write('Fuzzy.encoding', $this->encoding);
                     break;
