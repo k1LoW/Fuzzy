@@ -262,5 +262,27 @@ class AdjustableTestCase extends CakeTestCase{
         $this->assertIdentical($result['FuzzyPost']['prefecture'], '福岡県');
         $this->assertIdentical($result['FuzzyPost']['city'], '福岡市　中央区');
         $this->assertIdentical($result['FuzzyPost']['town'], '大名　2-4-22');
+
+        // en:
+        // jpn: trimやreplaceパラメータを利用してあらかじめ空白を排除することも可能
+        $this->FuzzyPost->convertFields = array(
+                                                array('field' => 'address',
+                                                      'trim' => true,
+                                                      'replace' => array(array(' ', '　'), ''),
+                                                      'address_split' => array('prefecture', 'city', 'town'),
+                                                      ),
+                                                );
+        $data = array('FuzzyPost' => array('title' => 'title4',
+                                           'title_mb' => 'タイトル４',
+                                           'body' => 'Address Split',
+                                           'address' => ' 福岡県　福岡 市 　 中央区　大名　2- 　4-22'));
+        $result = $this->FuzzyPost->save($data);
+        $this->assertType('array', $result);
+
+        $id = $this->FuzzyPost->getLastInsertId();
+        $result = $this->FuzzyPost->findById($id);
+        $this->assertIdentical($result['FuzzyPost']['prefecture'], '福岡県');
+        $this->assertIdentical($result['FuzzyPost']['city'], '福岡市中央区');
+        $this->assertIdentical($result['FuzzyPost']['town'], '大名2-4-22');
     }
 }
