@@ -13,6 +13,7 @@ class AdjustableBehavior extends ModelBehavior {
     public function setUp(Model $model, $settings = array()){
         $defaults = array(
                           'adjuster' => array('AdjusterJa', 'Fuzzy.Lib'),
+                          'autoAdjust' => true,
                           );
         // Default settings
         $this->settings[$model->alias] = Set::merge($defaults, $settings);
@@ -29,7 +30,9 @@ class AdjustableBehavior extends ModelBehavior {
      * @return
      */
     public function beforeValidate(Model $model, $options = array()){
-        $model->data = $this->adjust($model, $model->data);
+        if ($this->settings[$model->alias]['autoAdjust']) {
+            $model->data = $this->adjust($model, $model->data);
+        }
         return true;
     }
 
