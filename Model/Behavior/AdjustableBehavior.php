@@ -92,6 +92,17 @@ class AdjustableBehavior extends ModelBehavior {
                 $data[$modelName][$convertFields[$fieldName]['postal_split'][0]] = $zips[0];
                 $data[$modelName][$convertFields[$fieldName]['postal_split'][1]] = $zips[1];
             }
+
+            // address_split
+            if (!empty($convertFields[$fieldName]['address_split'])) {
+                $addresses = $this->adjuster->splitAddress($value);
+                $data[$modelName][$convertFields[$fieldName]['address_split'][0]] = '';
+                $data[$modelName][$convertFields[$fieldName]['address_split'][1]] = '';
+                $data[$modelName][$convertFields[$fieldName]['address_split'][2]] = '';
+                $data[$modelName][$convertFields[$fieldName]['address_split'][0]] = $addresses[0];
+                $data[$modelName][$convertFields[$fieldName]['address_split'][1]] .= $addresses[1];
+                $data[$modelName][$convertFields[$fieldName]['address_split'][2]] .= $addresses[2];
+            }
         }
         return $data;
     }

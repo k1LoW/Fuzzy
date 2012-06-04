@@ -429,4 +429,39 @@ class AdjusterJa {
         }
         return array($zip, null);
     }
+
+    /**
+     * splitAddress
+     *
+     * @param $address
+     */
+    public function splitAddress($address){
+        $prefecture = '';
+        $city = '';
+        $town = '';
+
+        // prefecture
+        $address = trim($address, " 　\t\n\r\0\x0B");
+        if (preg_match('/^(京都府|.+?[都道府県])/u', $address, $matches)) {
+            $prefecture = $matches[1];
+        }
+
+        $address = preg_replace('/^' . $prefecture . '/', '', $address);
+
+        // city
+        $address = trim($address, " 　\t\n\r\0\x0B");
+        if (preg_match('/^(.+日市市|伊達市|石狩市|八戸市|盛岡市|奥州市|南相馬市|新宿区|上越市|富山市|蒲郡市|黒部市|姫路市|大和郡山市|佐波郡玉村町|坂井市|小諸市|豊川市|郡.市|余市郡.+?町|高市郡.+?町|北九州市.+?区|小郡市|岩国市|周南市|杵島郡大町町|西海市|佐伯市|.+?市[^０-９一二三四五六七八九十]+?区|[^市]+?郡[^村]+?町|.+?郡[^町]+?村|[^郡]+?市|.+?区|.+?町|.+?村|)/u', $address, $matches)) {
+            $city = $matches[1];
+        }
+
+        // town
+        $address = preg_replace('/^' . $city . '/', '', $address);
+        $town = trim($address, " 　\t\n\r\0\x0B");
+
+        return array(
+                     $prefecture,
+                     $city,
+                     $town,
+                     );
+    }
 }

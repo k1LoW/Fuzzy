@@ -194,4 +194,73 @@ class AdjustableTestCase extends CakeTestCase{
         $this->assertIdentical($result['FuzzyPost']['zip1'], '810');
         $this->assertIdentical($result['FuzzyPost']['zip2'], '0042');
     }
+
+    /**
+     * testSaveAddressSplit
+     *
+     * en:
+     * jpn: Adjustableのaddress_split設定をすることでbeforeValidateの段階で住所情報を分割して保存できる
+     */
+    public function testSaveAddressSplit(){
+        $this->FuzzyPost->convertFields = array(
+                                                array('field' => 'address',
+                                                      'address_split' => array('prefecture', 'city', 'town'),
+                                                      ),
+                                                );
+        $data = array('FuzzyPost' => array('title' => 'title4',
+                                           'title_mb' => 'タイトル４',
+                                           'body' => 'Address Split',
+                                           'address' => '福岡県福岡市中央区大名2-4-22'));
+        $result = $this->FuzzyPost->save($data);
+        $this->assertType('array', $result);
+
+        $id = $this->FuzzyPost->getLastInsertId();
+        $result = $this->FuzzyPost->findById($id);
+        $this->assertIdentical($result['FuzzyPost']['prefecture'], '福岡県');
+        $this->assertIdentical($result['FuzzyPost']['city'], '福岡市中央区');
+        $this->assertIdentical($result['FuzzyPost']['town'], '大名2-4-22');
+
+        // en:
+        // jpn: 住所を3分割ではなく2分割する
+        $this->FuzzyPost->convertFields = array(
+                                                array('field' => 'address',
+                                                      'address_split' => array('prefecture',
+                                                                               'city',
+                                                                               'city' // 住所を2つにわける
+                                                                               ),
+                                                      ),
+                                                );
+        $data = array('FuzzyPost' => array('title' => 'title4',
+                                           'title_mb' => 'タイトル４',
+                                           'body' => 'Address Split',
+                                           'address' => '福岡県福岡市中央区大名2-4-22'));
+        $result = $this->FuzzyPost->save($data);
+        $this->assertType('array', $result);
+
+        $id = $this->FuzzyPost->getLastInsertId();
+        $result = $this->FuzzyPost->findById($id);
+        $this->assertIdentical($result['FuzzyPost']['prefecture'], '福岡県');
+        $this->assertIdentical($result['FuzzyPost']['city'], '福岡市中央区大名2-4-22');
+
+        // en:
+        // jpn: 空白などが入っていてもある程度考慮して分割する(各項目の前後空白を削除する)
+        //      Tips: trimやreplaceパラメータを利用してあらかじめ空白を排除することも可能
+        $this->FuzzyPost->convertFields = array(
+                                                array('field' => 'address',
+                                                      'address_split' => array('prefecture', 'city', 'town'),
+                                                      ),
+                                                );
+        $data = array('FuzzyPost' => array('title' => 'title4',
+                                           'title_mb' => 'タイトル４',
+                                           'body' => 'Address Split',
+                                           'address' => '福岡県　福岡市　中央区　大名　2-4-22'));
+        $result = $this->FuzzyPost->save($data);
+        $this->assertType('array', $result);
+
+        $id = $this->FuzzyPost->getLastInsertId();
+        $result = $this->FuzzyPost->findById($id);
+        $this->assertIdentical($result['FuzzyPost']['prefecture'], '福岡県');
+        $this->assertIdentical($result['FuzzyPost']['city'], '福岡市　中央区');
+        $this->assertIdentical($result['FuzzyPost']['town'], '大名　2-4-22');
+    }
 }
