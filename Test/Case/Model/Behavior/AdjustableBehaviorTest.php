@@ -63,7 +63,7 @@ class AdjustableTestCase extends CakeTestCase{
                                            'title_mb' => 'Title3',
                                            'body' => 'Save OK'));
         $result = $this->FuzzyPost->save($data);
-        $this->assertType('array', $result);
+        $this->assertTrue(is_array($result));
 
         $id = $this->FuzzyPost->getLastInsertId();
         $result = $this->FuzzyPost->findById($id);
@@ -87,7 +87,7 @@ class AdjustableTestCase extends CakeTestCase{
                                            'title_mb' => 'タイトル３',
                                            'body' => 'Save OK'));
         $result = $this->FuzzyPost->save($data);
-        $this->assertType('array', $result);
+        $this->assertTrue(is_array($result));
 
         $id = $this->FuzzyPost->getLastInsertId();
         $result = $this->FuzzyPost->findById($id);
@@ -102,7 +102,7 @@ class AdjustableTestCase extends CakeTestCase{
                                            'title_mb' => 'タイトル３',
                                            'body' => 'Save OK'));
         $result = $this->FuzzyPost->save($data);
-        $this->assertType('array', $result);
+        $this->assertTrue(is_array($result));
 
         $id = $this->FuzzyPost->getLastInsertId();
         $result = $this->FuzzyPost->findById($id);
@@ -126,7 +126,7 @@ class AdjustableTestCase extends CakeTestCase{
                                            'body' => 'Tel No Split',
                                            'tel_no' => '09212345678'));
         $result = $this->FuzzyPost->save($data);
-        $this->assertType('array', $result);
+        $this->assertTrue(is_array($result));
 
         $id = $this->FuzzyPost->getLastInsertId();
         $result = $this->FuzzyPost->findById($id);
@@ -140,13 +140,31 @@ class AdjustableTestCase extends CakeTestCase{
                                            'body' => 'Tel No Split',
                                            'tel_no' => '092-12345678'));
         $result = $this->FuzzyPost->save($data);
-        $this->assertType('array', $result);
+        $this->assertTrue(is_array($result));
 
         $id = $this->FuzzyPost->getLastInsertId();
         $result = $this->FuzzyPost->findById($id);
         $this->assertIdentical($result['FuzzyPost']['tel_no1'], '092');
         $this->assertIdentical($result['FuzzyPost']['tel_no2'], '1234');
         $this->assertIdentical($result['FuzzyPost']['tel_no3'], '5678');
+
+        // en:
+        // jpn: 文字列指定でimplode()も可能
+        $this->FuzzyPost->convertFields = array(
+                                                array('field' => 'tel_no',
+                                                      'phone_split' => '-',
+                                                      ),
+                                                );
+        $data = array('FuzzyPost' => array('title' => 'title4',
+                                           'title_mb' => 'タイトル４',
+                                           'body' => 'Tel No Split',
+                                           'tel_no' => '09212345678'));
+        $result = $this->FuzzyPost->save($data);
+        $this->assertTrue(is_array($result));
+
+        $id = $this->FuzzyPost->getLastInsertId();
+        $result = $this->FuzzyPost->findById($id);
+        $this->assertIdentical($result['FuzzyPost']['tel_no'], '092-1234-5678');
     }
 
     /**
@@ -166,7 +184,7 @@ class AdjustableTestCase extends CakeTestCase{
                                            'body' => 'Zip Split',
                                            'zip' => '8100042'));
         $result = $this->FuzzyPost->save($data);
-        $this->assertType('array', $result);
+        $this->assertTrue(is_array($result));
 
         $id = $this->FuzzyPost->getLastInsertId();
         $result = $this->FuzzyPost->findById($id);
@@ -187,12 +205,32 @@ class AdjustableTestCase extends CakeTestCase{
                                            'body' => 'Zip Split',
                                            'zip' => ' ８10ー0０42 '));
         $result = $this->FuzzyPost->save($data);
-        $this->assertType('array', $result);
+        $this->assertTrue(is_array($result));
 
         $id = $this->FuzzyPost->getLastInsertId();
         $result = $this->FuzzyPost->findById($id);
         $this->assertIdentical($result['FuzzyPost']['zip1'], '810');
         $this->assertIdentical($result['FuzzyPost']['zip2'], '0042');
+
+        // en:
+        // jpn: 文字列指定でimplode()も可能
+        $this->FuzzyPost->convertFields = array(
+                                                array('field' => 'zip',
+                                                      'mb_convert_kana' => 'n',
+                                                      'postal_split' => '-',
+                                                      ),
+                                                );
+
+        $data = array('FuzzyPost' => array('title' => 'title4',
+                                           'title_mb' => 'タイトル４',
+                                           'body' => 'Zip Split',
+                                           'zip' => ' ８10ー0０42 '));
+        $result = $this->FuzzyPost->save($data);
+        $this->assertTrue(is_array($result));
+
+        $id = $this->FuzzyPost->getLastInsertId();
+        $result = $this->FuzzyPost->findById($id);
+        $this->assertIdentical($result['FuzzyPost']['zip'], '810-0042');
     }
 
     /**
@@ -212,7 +250,7 @@ class AdjustableTestCase extends CakeTestCase{
                                            'body' => 'Address Split',
                                            'address' => '福岡県福岡市中央区大名2-4-22'));
         $result = $this->FuzzyPost->save($data);
-        $this->assertType('array', $result);
+        $this->assertTrue(is_array($result));
 
         $id = $this->FuzzyPost->getLastInsertId();
         $result = $this->FuzzyPost->findById($id);
@@ -235,7 +273,7 @@ class AdjustableTestCase extends CakeTestCase{
                                            'body' => 'Address Split',
                                            'address' => '福岡県福岡市中央区大名2-4-22'));
         $result = $this->FuzzyPost->save($data);
-        $this->assertType('array', $result);
+        $this->assertTrue(is_array($result));
 
         $id = $this->FuzzyPost->getLastInsertId();
         $result = $this->FuzzyPost->findById($id);
@@ -255,7 +293,7 @@ class AdjustableTestCase extends CakeTestCase{
                                            'body' => 'Address Split',
                                            'address' => '福岡県　福岡市　中央区　大名　2-4-22'));
         $result = $this->FuzzyPost->save($data);
-        $this->assertType('array', $result);
+        $this->assertTrue(is_array($result));
 
         $id = $this->FuzzyPost->getLastInsertId();
         $result = $this->FuzzyPost->findById($id);
@@ -277,7 +315,7 @@ class AdjustableTestCase extends CakeTestCase{
                                            'body' => 'Address Split',
                                            'address' => ' 福岡県　福岡 市 　 中央区　大名　2- 　4-22'));
         $result = $this->FuzzyPost->save($data);
-        $this->assertType('array', $result);
+        $this->assertTrue(is_array($result));
 
         $id = $this->FuzzyPost->getLastInsertId();
         $result = $this->FuzzyPost->findById($id);

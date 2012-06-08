@@ -84,16 +84,24 @@ class AdjustableBehavior extends ModelBehavior {
             // phone_split
             if (!empty($convertFields[$fieldName]['phone_split'])) {
                 $phoneNos = $this->adjuster->splitPhoneNo($value);
-                $data[$modelName][$convertFields[$fieldName]['phone_split'][0]] = $phoneNos[0];
-                $data[$modelName][$convertFields[$fieldName]['phone_split'][1]] = $phoneNos[1];
-                $data[$modelName][$convertFields[$fieldName]['phone_split'][2]] = $phoneNos[2];
+                if (is_string($convertFields[$fieldName]['phone_split'])) {
+                    $data[$modelName][$fieldName] = implode($convertFields[$fieldName]['phone_split'], $phoneNos);
+                } else {
+                    $data[$modelName][$convertFields[$fieldName]['phone_split'][0]] = $phoneNos[0];
+                    $data[$modelName][$convertFields[$fieldName]['phone_split'][1]] = $phoneNos[1];
+                    $data[$modelName][$convertFields[$fieldName]['phone_split'][2]] = $phoneNos[2];
+                }
             }
 
             // postal_split
             if (!empty($convertFields[$fieldName]['postal_split'])) {
                 $zips = $this->adjuster->splitZipCode($value);
-                $data[$modelName][$convertFields[$fieldName]['postal_split'][0]] = $zips[0];
-                $data[$modelName][$convertFields[$fieldName]['postal_split'][1]] = $zips[1];
+                if (is_string($convertFields[$fieldName]['postal_split'])) {
+                    $data[$modelName][$fieldName] = implode($convertFields[$fieldName]['postal_split'], $zips);
+                } else {
+                    $data[$modelName][$convertFields[$fieldName]['postal_split'][0]] = $zips[0];
+                    $data[$modelName][$convertFields[$fieldName]['postal_split'][1]] = $zips[1];
+                }
             }
 
             // address_split

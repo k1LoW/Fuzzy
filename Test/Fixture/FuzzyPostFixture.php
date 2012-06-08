@@ -7,9 +7,11 @@ class FuzzyPostFixture extends CakeTestFixture {
         'title' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
         'title_mb' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
         'body' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+        'tel_no' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
         'tel_no1' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
         'tel_no2' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
         'tel_no3' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+        'zip' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
         'zip1' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
         'zip2' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
         'prefecture' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
@@ -21,7 +23,7 @@ class FuzzyPostFixture extends CakeTestFixture {
 
     var $records = array(
                          array(
-                               'id' => 1,
+                               //'id' => 1,
                                'title' => 'Title',
                                'title_mb' => 'タイトル',
                                'body' => 'Fuzzy.FuzzyInput Test',
@@ -34,7 +36,7 @@ class FuzzyPostFixture extends CakeTestFixture {
                                'modified' => '2011-08-23 12:05:02'
                                ),
                          array(
-                               'id' => 2,
+                               //'id' => 2,
                                'title' => 'Title2',
                                'title_mb' => 'タイトル２',
                                'body' => 'Fuzzy.FuzzyInput Test',
