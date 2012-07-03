@@ -1,8 +1,6 @@
 <?php
-
-App::uses('Model', 'Model');
-App::uses('AppModel', 'Model');
-
+App::import('Core', 'Model');
+App::import('Fixture', 'FuzzyPost');
 class FuzzyPost extends CakeTestModel{
 
     public $name = 'FuzzyPost';
@@ -17,12 +15,12 @@ class AdjustableTestCase extends CakeTestCase{
 
     public $fixtures = array('plugin.fuzzy.fuzzy_post');
 
-    function setUp() {
+    function startTest() {
         $this->FuzzyPost = new FuzzyPost(); // jpn: 初期化するため
         $this->FuzzyPostFixture = ClassRegistry::init('FuzzyPostFixture');
     }
 
-    function tearDown() {
+    function endTest() {
         unset($this->FuzzyPost);
         unset($this->FuzzyPostFixture);
     }

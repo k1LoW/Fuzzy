@@ -12,15 +12,16 @@ class AdjustableBehavior extends ModelBehavior {
      */
     public function setUp(Model $model, $settings = array()){
         $defaults = array(
-                          'adjuster' => array('AdjusterJa', 'Fuzzy.Lib'),
+                          'adjuster' => array('Lib', 'Fuzzy.AdjusterJa'),
                           'autoAdjust' => true,
                           );
         // Default settings
         $this->settings[$model->alias] = Set::merge($defaults, $settings);
 
         $adjuster = $this->settings[$model->alias]['adjuster'];
-        App::uses($adjuster[0], $adjuster[1]);
-        $this->adjuster = new $adjuster[0];
+        App::import($adjuster[0], $adjuster[1]);
+        $className = preg_replace('/^.*\./','', $adjuster[1]);
+        $this->adjuster = new $className;
     }
 
     /**
@@ -43,6 +44,9 @@ class AdjustableBehavior extends ModelBehavior {
      */
     public function adjust(Model $model, $data){
         $modelName = $model->alias;
+        if (empty($model->convertFields)) {
+            return $data;
+        }
         $convertFields = Set::combine($model->convertFields, '/field' , '/');
 
         foreach ($data[$modelName] as $fieldName => $value) {
