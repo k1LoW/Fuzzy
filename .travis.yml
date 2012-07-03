@@ -25,7 +25,7 @@ before_script:
     'plugins' => array('/home/vagrant/builds/k1LoW/plugins/'),
     ));
     " > cakephp/app/config/bootstrap.php
-  - mv tests/database.php cakephp/app/config/database.php
+  - mv ./plugins/fuzzy/tests/database.php cakephp/app/config/database.php
   - cd ./cakephp
 
 script:
